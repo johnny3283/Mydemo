@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <title>Member Directory</title>
+
+    <style>
+
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            overflow-y: auto ;
+        }
+
+        th,td{
+            white-space: nowrap;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #333;
+            padding-top: 20px;
+            transition: left 0.3s;
+            overflow-y: auto;
+
+        }
+
+
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #fff;
+            display: block;
+        }
+
+        .sidebar li {
+            color: #fff;
+        }
+
+
+        .sidebar a:hover {
+            background-color: #555;
+        }
+
+
+        .container {
+            margin-left: 0;
+            padding: 20px;
+            width: 100%; /* 主内容区域宽度为100% */
+            box-sizing: border-box; /* 包含内边距和边框在内 */
+            transition: margin-left 0.3s, width 0.3s; /* 添加过渡效果 */
+        }
+
+        .toggle-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            color: black;
+            font-size: 24px;
+        }
+
+        /* 菜单样式 */
+        .menu {
+            padding: 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="sidebar" id="mySidebar">
+
+    <div class="menu">
+        <a th:href="@{/index}"> 首頁</a>
+        <a href="#">員工管理</a>
+        <div class="submenu">
+            <a th:href="@{/employees/addEmployee}">新增員工</a>
+            <a th:href="@{/employees/listEmployee}">所有員工</a>
+            <form action="#" th:action="@{/employees/ShowOneEmployee}"
+                  method="POST">
+                <label>
+                    <input type="number" style="width: 40px;" name="employeeId" required/>
+                </label>
+                <button type="submit">查詢員工</button>
+            </form>
+        </div>
+        <a href="#">會員管理</a>
+        <div class="submenu">
+            <a th:href="@{/members/addMember}">新增會員</a>
+            <a th:href="@{/members/listMember}">全部會員</a>
+            <form action="#" th:action="@{/members/showOneDisplay}"
+                  method="POST">
+                <label>
+                    <input type="number" style="width: 40px;" name="memberId" required/>
+                </label>
+                <button type="submit">查詢會員</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <p>
+        user:<span sec:authentication="principal.username"></span>
+        <br><br>
+        role(s):<span sec:authentication="principal.authorities"></span>
+    </p>
+    <hr>
+    <hr>
+    <form action="#" th:action="@{/logout}" method="post">
+        <input type="submit" value="logout"/>
+    </form>
+</div>
+<div class="container" id="Container">
+    <span class="toggle-button" id="toggle" onclick="toggleSidebar()">☰</span>
+    <h3> &nbsp;&nbsp;會員列表</h3>
+    <hr>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>會員編號</th>
+            <th>會員帳號</th>
+            <th>會員密碼</th>
+            <th>會員姓名</th>
+            <th>會員電話</th>
+            <th>會員暱稱</th>
+            <th>會員地址</th>
+            <th>會員email</th>
+            <th>會員狀態</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="tempMember : ${members}">
+
+            <td th:text="${tempMember.memberNo}"/>
+            <td th:text="${tempMember.memberAccount}"/>
+            <td th:text="${tempMember.memberPassword}"/>
+            <td th:text="${tempMember.memberName}"/>
+            <td th:text="${tempMember.memberPhone}"/>
+            <td th:text="${tempMember.memberNickname}"/>
+            <td th:text="${tempMember.memberAddress}"/>
+            <td th:text="${tempMember.memberEmail}"/>
+            <td th:text="${tempMember.memberState}"/>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById("mySidebar");
+        const toggle = document.getElementById("toggle");
+        const content = document.getElementById("Container");
+        if (sidebar.style.left === "0px") {
+            sidebar.style.left = "-250px" // 隐藏侧边栏
+            toggle.style.color = "black";
+            content.style.marginLeft = "0";
+            content.style.width = "100%";
+        } else {
+            sidebar.style.left = "0px" // 显示侧边栏
+            content.style.marginLeft = "250px"
+            toggle.style.color = "white"
+            content.style.width="calc(100%-250px";
+        }
+    }
+
+    const menuItems = document.querySelectorAll('.menu a');
+    menuItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+            const submenu = this.nextElementSibling;
+            if (submenu.style.display === "block") {
+                submenu.style.display = "none";
+            } else {
+                submenu.style.display = "block";
+            }
+        });
+    });
+</script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>myDemo</title>
+    <style>
+        /* 设置整个页面的样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 创建侧边栏容器的样式 */
+        .sidebar {
+            height: 100%;
+            width: 250px; /* 侧边栏的宽度 */
+            position: fixed; /* 使侧边栏固定在屏幕上 */
+            top: 0;
+            background-color: #333; /* 侧边栏的背景颜色 */
+            padding-top: 20px; /* 顶部留出一些空间 */
+            transition: left 0.3s;
+            overflow-y: auto;
+        }
+
+        /* 设置侧边栏中链接的样式 */
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #fff; /* 链接文本的颜色 */
+            display: block; /* 使链接占据整个可用宽度 */
+        }
+
+        .sidebar li {
+            color: #fff;
+        }
+
+        /* 设置链接的悬停效果 */
+        .sidebar a:hover {
+            background-color: #555; /* 悬停时的背景颜色 */
+        }
+
+        /* 设置主内容区域的样式，使其向右移动以腾出空间 */
+        .container {
+            margin-left: 250px; /* 与侧边栏的宽度相同 */
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        /* 菜单样式 */
+        .menu {
+            padding: 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar" id="mySidebar">
+
+    <div class="menu">
+        <a href="#">員工管理</a>
+        <div class="submenu">
+            <a th:href="@{/employees/addEmployee}">新增員工</a>
+            <a th:href="@{/employees/listEmployee}">所有員工</a>
+            <form action="#" th:action="@{/employees/ShowOneEmployee}"
+                  method="POST">
+                <label>
+                    <input type="number" style="width: 40px;" name="employeeId" required/>
+                </label>
+                <button type="submit">查詢員工</button>
+            </form>
+        </div>
+        <a href="#">會員管理</a>
+        <div class="submenu">
+            <a th:href="@{/members/addMember}">新增會員</a>
+            <a th:href="@{/members/listMember}">全部會員</a>
+            <a th:href="@{/members/pageMembers}">全部會員有分頁</a>
+            <form action="#" th:action="@{/members/showOneDisplay}"
+                  method="POST">
+                <label>
+                    <input type="number" style="width: 40px;" name="memberId" required/>
+                </label>
+                <button type="submit">查詢會員</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <p>
+        user:<span sec:authentication="principal.username"></span>
+        <br><br>
+        role(s):<span sec:authentication="principal.authorities"></span>
+    </p>
+    <hr>
+    <hr>
+    <form action="#" th:action="@{/logout}" method="post">
+        <input type="submit" value="logout"/>
+    </form>
+</div>
+<div class="container" id="Container">
+    <div sec:authorize="hasRole('MANAGER')">
+        <p>
+            <a th:href="@{/leaders}">leadership meeting</a>
+            (only for manager peeps)
+        </p>
+    </div>
+    <div sec:authorize="hasRole('ADMIN')">
+        <p>
+            <a th:href="@{/systems}">it systems meeting</a>
+            (only for admin peeps)
+        </p>
+    </div>
+</div>
+<script>
+    const menuItems = document.querySelectorAll('.menu a');
+    menuItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+            const submenu = this.nextElementSibling;
+            if (submenu.style.display === "block") {
+                submenu.style.display = "none";
+            } else {
+                submenu.style.display = "block";
+            }
+        });
+    });
+</script>
+</body>
+</html>
