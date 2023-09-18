@@ -12,6 +12,10 @@ public class backToIndexController {
     public String backIndex (){
         return "index";
     }
+    @GetMapping("frontIndex")
+    public String frontIndex (){
+        return "frontIndex";
+    }
     @GetMapping("/leaders")
     public String showLeaders (){
         return "leaders";
