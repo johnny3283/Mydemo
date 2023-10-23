@@ -6,7 +6,6 @@ import com.example.myDemo.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,7 @@ import java.util.List;
 @RequestMapping("/members")
 public class MemberController {
 
-    private MemberService memberService;
+    private final MemberService memberService;
 
     public MemberController(MemberService theMemberService) {
         memberService = theMemberService;
@@ -66,6 +65,6 @@ public class MemberController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", memberPage.getTotalPages());
 
-        return "members/pageMembers"; // 这个视图名称对应于Thymeleaf模板
+        return "members/pageMembers";
     }
 }

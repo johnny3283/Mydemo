@@ -1,10 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>myDemo</title>
+    <style>
+        /* 设置整个页面的样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 创建侧边栏容器的样式 */
+        .sidebar {
+            height: 100%;
+            width: 250px; /* 侧边栏的宽度 */
+            position: fixed; /* 使侧边栏固定在屏幕上 */
+            top: 0;
+            background-color: #333; /* 侧边栏的背景颜色 */
+            padding-top: 20px; /* 顶部留出一些空间 */
+            transition: left 0.3s;
+            overflow-y: auto;
+        }
+
+        /* 设置侧边栏中链接的样式 */
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #fff; /* 链接文本的颜色 */
+            display: block; /* 使链接占据整个可用宽度 */
+        }
+
+        .sidebar li {
+            color: #fff;
+        }
+
+        /* 设置链接的悬停效果 */
+        .sidebar a:hover {
+            background-color: #555; /* 悬停时的背景颜色 */
+        }
+
+        /* 菜单样式 */
+        .menu {
+            padding: 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+    </style>
 </head>
 <body>
-    <H4>這是前台首頁</H4>
+<div class="sidebar" id="mySidebar">
+
+    <div class="menu">
+        <a href="#">會員管理</a>
+        <div class="submenu">
+            <a th:href="@{/}">會員資料</a>
+        </div>
+    </div>
+    <hr>
+<!--    <p>-->
+<!--        user:<span sec:authentication="principal.username"></span>-->
+<!--    </p>-->
+    <hr>
+    <hr>
+    <form action="#" th:action="@{/frontLoginPage}" method="post">
+        <input type="submit" value="login"/>
+    </form>
+    <form action="#" th:action="@{/logout}" method="post">
+        <input type="submit" value="logout"/>
+    </form>
+</div>
+
+<script>
+    const menuItems = document.querySelectorAll('.menu a');
+    menuItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+            const submenu = this.nextElementSibling;
+            if (submenu.style.display === "block") {
+                submenu.style.display = "none";
+            } else {
+                submenu.style.display = "block";
+            }
+        });
+    });
+</script>
 </body>
 </html>

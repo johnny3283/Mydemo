@@ -10,13 +10,18 @@ public class loginController {
     @GetMapping("/showMyLoginPage")
     public String showMyLoginPage() {
 
-        return "fancy-login";
+        return "/login/backendLogin";
     }
 
+    @GetMapping("/frontLoginPage")
+    public String frontLoginPage() {
+
+        return "/login/frontLogin";
+    }
     @GetMapping("/access-denied")
     public String AccessDenied() {
 
-        return "access-denied";
+        return "/login/accessDenied";
     }
 
 }
